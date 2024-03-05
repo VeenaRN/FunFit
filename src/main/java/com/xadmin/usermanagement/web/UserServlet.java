@@ -2,7 +2,6 @@ package com.xadmin.usermanagement.web;
 
 import java.io.IOException;
 
-
 import java.sql.SQLException;
 import java.util.List;
 
@@ -14,8 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.xadmin.usermanagement.bean.User;
-import com.xadmin.usermanagement.dao.UserDao;
+import com.xadmin.usermanagement.bean.Participants;
+import com.xadmin.usermanagement.dao.ParticipantsDao;
 
 /**
  * Servlet implementation class UserServlet
@@ -23,239 +22,206 @@ import com.xadmin.usermanagement.dao.UserDao;
 @WebServlet("/")
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-     private UserDao userDao;  
-   
+	private ParticipantsDao participantsdao;
 
 	/**
 	 * @see Servlet#init(ServletConfig)
 	 */
-	public void init() throws ServletException {
-		userDao=new UserDao();
+	public UserServlet() {
+		participantsdao = new ParticipantsDao();
 	}
-	
+
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
 		doGet(request, response);
 	}
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-	String action=request.getServletPath();
-	switch(action){
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		String action = request.getServletPath();
+		switch (action) {
 		case "/newuser":
-		showNewForm(request,response);
+			showNewForm(request, response);
 			break;
-			
+
 		case "/insertuser":
-		   
-		try {
-			insertUser(request, response);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		       break; 
 
-	
-	
+			try {
+				insertUser(request, response);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			break;
+
 		case "/deleteuser":
-		   
-		try {
-			deleteUser(request, response);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		    
-		    break;
 
-		
+			try {
+				deleteUser(request, response);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			break;
+
 		case "/edituser":
-		   
-		try {
-			showEditForm(request, response);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ServletException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		    
-		    break;
-		
+
+			try {
+				showEditForm(request, response);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ServletException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			break;
+
 		case "/updateuser":
-		   
-		try {
-			updateUser(request, response);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		     
-		    break;
-		
+
+			try {
+				updateUser(request, response);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			break;
 
 		case "/list":
-		try {
-			listUser(request,response);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ServletException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			try {
+				listUser(request, response);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ServletException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
+		}
 	}
-	}
-	
+
 	private void showNewForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("user-form.jsp");
 		dispatcher.forward(request, response);
 	}
-	//insert user
-	private void insertUser(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
+
+	// insert user
+	private void insertUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		String name = request.getParameter("name");
-		String age = request.getParameter("age");
+		String gender = request.getParameter("gender");
 		String email = request.getParameter("email");
-		String phone = request.getParameter("phone");
-		String batchname= request.getParameter("batchname");//changed
-		
-		
 		String address = request.getParameter("address");
-		//String registration_date  = request.getParameter("registration_date");
-		User newUser = new User(name,age,email,phone,batchname,address );
+		String phone = request.getParameter("phone");
+		int batch_id = Integer.parseInt(request.getParameter("batch_id"));
+
 		
-		userDao.insertUser(newUser);
+		Participants newUser = new Participants(name, gender, email, address, phone, batch_id);
+
+		participantsdao.insertUser(newUser);
 		response.sendRedirect("list");
+
+//		try {
+//	        participantsdao.insertUser(newUser);
+//	        // Set success message
+//	        request.setAttribute("successMessage", "User saved successfully");
+//	    } catch (Exception e) {
+//	        e.printStackTrace();
+//	        // Set error message if insertion fails
+//	        request.setAttribute("errorMessage", "Failed to save user");
+//	    }
+//	    
+//	    // Redirect to the list page
+//	    response.sendRedirect("list");
+//	}
 	}
-	
-	
-	//delete user
-	private void deleteUser(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
-		int participant_id  = Integer.parseInt(request.getParameter("participant_id"));
+
+	// delete user
+	private void deleteUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
 		try {
-		userDao.deleteUser(participant_id);
-		}catch (Exception e) {
+			participantsdao.deleteUser(id);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		response.sendRedirect("list");
 
 	}
-	//edit
-	
+	// edit
+
 	private void showEditForm(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, ServletException, IOException 
-	{
-		
-		int participant_id = Integer.parseInt(request.getParameter("participant_id"));
-		
-		User existingUser;
+			throws SQLException, ServletException, IOException {
+
+		int id = Integer.parseInt(request.getParameter("id"));
+
+		Participants existingUser;
 		try {
-			existingUser=userDao.selectUser(participant_id);
+			existingUser = participantsdao.selectUser(id);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("user-form.jsp");
-			request.setAttribute("user", existingUser);
+			request.setAttribute("part", existingUser);
 			dispatcher.forward(request, response);
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	
-	private void updateUser(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
-		int participant_id = Integer.parseInt(request.getParameter("participant_id"));
+	private void updateUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
 		String name = request.getParameter("name");
-		String age = request.getParameter("age");
-		
+		String gender = request.getParameter("gender");
+
 		String email = request.getParameter("email");
-		String phone = request.getParameter("phone");
-		
-		String batchname= request.getParameter("batchname");//changed
 		String address = request.getParameter("address");
-		
-		User user = new User(participant_id,name,age,email,phone,batchname,address);
-		userDao.updateUser(user);
+		String phone = request.getParameter("phone");
+
+		int batch_id = Integer.parseInt(request.getParameter("batch_id"));
+
+		Participants part = new Participants(id, name, gender, email, address, phone, batch_id);
+		participantsdao.updateUser(part);
 		response.sendRedirect("list");
 	}
+
 	
-	
-	//default
 	private void listUser(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
 		try {
-		List<User> listUser = userDao.selectAllUsers();
-		request.setAttribute("listUser", listUser);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("user-list.jsp");
-		dispatcher.forward(request, response);
-	}catch (Exception e) {
-		e.printStackTrace();
-	}
-	
+			List<Participants> listUser = participantsdao.selectAllUsers();
+			request.setAttribute("listUser", listUser);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("user-list.jsp");
+			dispatcher.forward(request, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-	
-
-
