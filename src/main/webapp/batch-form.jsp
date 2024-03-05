@@ -96,13 +96,7 @@ button[type="submit"] {
 						value="<c:out value='${batch.name}' />" class="form-control"
 						name="name" required="required">
 				</fieldset>
-				<!--  
-            <fieldset class="form-group">
-                <label>Session Time</label> <input type="text"
-                    value="<c:out value='${batch.time}' />" class="form-control"
-                    name="time" required="required">
-            </fieldset>
-            -->
+				
 				<fieldset class="form-group">
 					<label>Timings</label> <input type="text"
 						value="<c:out value="${batch.time}" />" class="form-control"

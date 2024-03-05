@@ -27,6 +27,8 @@ public class ParticipantsDao {
 	private static final String UPDATE_USERS_SQL = "update participants set name = ?,gender=?,email= ?,address=?,phone=?,batch_id=? where id  = ?;";
 
 	public ParticipantsDao() {
+		
+		
 
 	}
 
